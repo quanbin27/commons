@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+package payment;
+
+option go_package = "github.com/quanbin27/common/genproto/payments";
+
+// Enum trạng thái thanh toán
+enum PaymentStatus {
+  PAYMENT_STATUS_UNSPECIFIED = 0;
+  PENDING = 1;      // Chờ thanh toán
+  COMPLETED = 2;    // Đã thanh toán
+  FAILED = 3;       // Thanh toán thất bại
+  CANCELLED = 4;    // Đã hủy
+}
+enum PaymentMethod{
+  CASH=0;
+  BANK=1;
+}
+// Yêu cầu tạo thanh toán
+message CreatePaymentRequest {
+  int32 order_id = 1;    // ID đơn hàng từ OrderService (nếu có)
+  int32 appointment_id = 2; // ID lịch hẹn từ AppointmentService (nếu có)
+  float amount = 3;       // Số tiền cần thanh toán
+  string description = 4; // Mô tả thanh toán
+  PaymentMethod method=5;
+}
+message CreatePaymentResponse {
+  int32 payment_id = 1;
+}
+message CreatePaymentURLRequest{
+  int32 payment_id=1;
+  float amount = 2;       // Số tiền cần thanh toán
+  string description = 3; // Mô tả thanh toán
+}
+message CreatePaymentURLResponse {
+  string payment_link_id = 1;         // ID thanh toán payos
+  string checkout_url = 2;  // URL thanh toán của PayOS
+}
+message CancelPaymentLinkRequest{
+  int32 payment_id=1;
+    string cancellation_reason=2;
+}
+message CancelPaymentLinkResponse{
+  string status=1;
+}
+message GetPaymentInfoRequest {
+  int32 payment_id = 1;
+}
+message GetPaymentInfoResponse {
+  PaymentStatus status = 1;
+  PaymentMethod method =2 ;
+  int32 order_id = 3;    // ID đơn hàng từ OrderService (nếu có)
+  int32 appointment_id = 4; // ID lịch hẹn từ AppointmentService (nếu có)
+  float amount = 5;       // Số tiền cần thanh toán
+  string description = 6; // Mô tả thanh toán
+}
+message UpdatePaymentStatusResponse{
+  string status=1;
+}
+message UpdatePaymentStatusRequest {
+  int32 payment_id = 1;
+  PaymentStatus status = 2;
+}
+message UpdatePaymentAmountRequest{
+  int32 payment_id = 1;
+  float amount = 2;
+}
+message UpdatePaymentAmountResponse{
+  string status=1;
+}
+message UpdatePaymentMethodRequest{
+  int32 payment_id = 1;
+  PaymentMethod method = 2;
+}
+message UpdatePaymentMethodResponse{
+  string status=1;
+}
+// Service thanh toán
+service PaymentService {
+  rpc CreatePayment(CreatePaymentRequest) returns (CreatePaymentResponse);
+  rpc GetPaymentInfo(GetPaymentInfoRequest) returns (GetPaymentInfoResponse);
+  rpc CreatePaymentURL(CreatePaymentURLRequest) returns (CreatePaymentURLResponse);
+  rpc CancelPaymentLink(CancelPaymentLinkRequest) returns (CancelPaymentLinkResponse);
+  rpc UpdatePaymentStatus(UpdatePaymentStatusRequest) returns (UpdatePaymentStatusResponse);
+  rpc UpdatePaymentMethod(UpdatePaymentMethodRequest) returns (UpdatePaymentMethodResponse);
+  rpc UpdatePaymentAmount(UpdatePaymentAmountRequest) returns (UpdatePaymentAmountResponse);
+}
