@@ -256,7 +256,7 @@ message ListPrescriptionsRequest {
 }
 
 message ListPrescriptionsResponse {
-  repeated Prescription prescriptions = 1;
+  Prescription prescriptions = 1;
 }
 
 // Service definition
