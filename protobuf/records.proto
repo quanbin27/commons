@@ -251,11 +251,11 @@ message DeletePrescriptionResponse {
   bool success = 1;
 }
 
-message ListPrescriptionsRequest {
+message GetPrescriptionByExaminationIDRequest {
   string examination_id = 1;
 }
 
-message ListPrescriptionsResponse {
+message GetPrescriptionByExaminationIDResponse {
   Prescription prescriptions = 1;
 }
 
@@ -287,5 +287,5 @@ service PetRecordService {
   rpc GetPrescription(GetPrescriptionRequest) returns (GetPrescriptionResponse) {}
   rpc UpdatePrescription(UpdatePrescriptionRequest) returns (UpdatePrescriptionResponse) {}
   rpc DeletePrescription(DeletePrescriptionRequest) returns (DeletePrescriptionResponse) {}
-  rpc ListPrescriptions(ListPrescriptionsRequest) returns (ListPrescriptionsResponse) {}
+  rpc GetPrescriptionByExaminationID(GetPrescriptionByExaminationIDRequest) returns (GetPrescriptionByExaminationIDResponse) {}
 }
