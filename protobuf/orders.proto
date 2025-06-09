@@ -35,7 +35,7 @@ message OrderItem {
 enum OrderStatus {
   ORDER_STATUS_UNSPECIFIED = 0; // Giá trị mặc định (bắt buộc trong Protobuf)
   PENDING = 1;
-  PAID = 2;
+    PAID = 2;
   COMPLETED = 3;
   CANCELLED = 4;
 }
