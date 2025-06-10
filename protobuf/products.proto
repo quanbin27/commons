@@ -112,9 +112,18 @@ message ListAttachableProductsResponse{
 message ListAllProductsResponse{
   repeated GeneralProduct products=1;
 }
+message ProductWithStock {
+  string name = 1;
+  string description = 2;
+  float price = 3;
+  string imgurl=4;
+  int32 product_id = 5;
+  string product_type = 6; // "food", "accessory", "medicine"
+  repeated Inventory inventory = 7; // Số lượng có sẵn tại các chi nhánh
+  bool is_attachable=8;
+}
 message ListAllProductsWithStockResponse{
-  repeated GeneralProduct products = 1;
-  repeated Inventory inventory = 2;// Số lượng có sẵn tại các chi nhánh
+  repeated ProductWithStock products = 1;
 }
 message ListFoodResponse { repeated Food foods = 1; }
 message ListAccessoryResponse { repeated Accessory accessories = 1; }
