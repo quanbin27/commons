@@ -30,6 +30,9 @@ type Config struct {
 	BaseURL                string
 	RedisAddr              string
 	KafkaAddr              string
+	ClientID               string
+	ApiKey                 string
+	CheckSumKey            string
 }
 
 var Envs = initConfig()
