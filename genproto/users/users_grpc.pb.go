@@ -35,6 +35,7 @@ const (
 	UserService_CreateUser_FullMethodName            = "/UserService/CreateUser"
 	UserService_GetAllUsers_FullMethodName           = "/UserService/GetAllUsers"
 	UserService_EditUser_FullMethodName              = "/UserService/EditUser"
+	UserService_GetUserCount_FullMethodName          = "/UserService/GetUserCount"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -57,6 +58,7 @@ type UserServiceClient interface {
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	GetAllUsers(ctx context.Context, in *GetAllUsersRequest, opts ...grpc.CallOption) (*GetAllUsersResponse, error)
 	EditUser(ctx context.Context, in *EditUserRequest, opts ...grpc.CallOption) (*EditUserResponse, error)
+	GetUserCount(ctx context.Context, in *GetUserCountRequest, opts ...grpc.CallOption) (*GetUserCountResponse, error)
 }
 
 type userServiceClient struct {
@@ -227,6 +229,16 @@ func (c *userServiceClient) EditUser(ctx context.Context, in *EditUserRequest, o
 	return out, nil
 }
 
+func (c *userServiceClient) GetUserCount(ctx context.Context, in *GetUserCountRequest, opts ...grpc.CallOption) (*GetUserCountResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetUserCountResponse)
+	err := c.cc.Invoke(ctx, UserService_GetUserCount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility.
@@ -247,6 +259,7 @@ type UserServiceServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	GetAllUsers(context.Context, *GetAllUsersRequest) (*GetAllUsersResponse, error)
 	EditUser(context.Context, *EditUserRequest) (*EditUserResponse, error)
+	GetUserCount(context.Context, *GetUserCountRequest) (*GetUserCountResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -304,6 +317,9 @@ func (UnimplementedUserServiceServer) GetAllUsers(context.Context, *GetAllUsersR
 }
 func (UnimplementedUserServiceServer) EditUser(context.Context, *EditUserRequest) (*EditUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EditUser not implemented")
+}
+func (UnimplementedUserServiceServer) GetUserCount(context.Context, *GetUserCountRequest) (*GetUserCountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserCount not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 func (UnimplementedUserServiceServer) testEmbeddedByValue()                     {}
@@ -614,6 +630,24 @@ func _UserService_EditUser_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_GetUserCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserCountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetUserCount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_GetUserCount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetUserCount(ctx, req.(*GetUserCountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -684,6 +718,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "EditUser",
 			Handler:    _UserService_EditUser_Handler,
+		},
+		{
+			MethodName: "GetUserCount",
+			Handler:    _UserService_GetUserCount_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

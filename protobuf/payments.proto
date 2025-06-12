@@ -80,6 +80,18 @@ message UpdatePaymentMethodRequest{
 message UpdatePaymentMethodResponse{
   string status=1;
 }
+message GetAllPaymentsRequest {
+}
+message GetAllPaymentsResponse {
+  repeated GetPaymentInfoResponse payments = 1; // Danh sách các thông tin thanh toán
+}
+message GetTotalRevenueRequest {
+  int32 month = 1; // Tháng cần tính doanh thu
+}
+message GetTotalRevenueResponse {
+  float total_revenue = 1; // Tổng doanh thu trong tháng
+  int32 total_transactions = 2; // Tổng số giao dịch trong tháng
+}
 // Service thanh toán
 service PaymentService {
   rpc CreatePayment(CreatePaymentRequest) returns (CreatePaymentResponse);
@@ -90,4 +102,6 @@ service PaymentService {
   rpc UpdatePaymentMethod(UpdatePaymentMethodRequest) returns (UpdatePaymentMethodResponse);
   rpc UpdatePaymentAmount(UpdatePaymentAmountRequest) returns (UpdatePaymentAmountResponse);
   rpc UpdateBankPaymentStatus(UpdateBankPaymentStatusRequest) returns (UpdatePaymentStatusResponse);
+  rpc GetAllPayment(GetAllPaymentsRequest) returns (GetAllPaymentsResponse);
+  rpc GetTotalRevenue(GetTotalRevenueRequest) returns (GetTotalRevenueResponse);
 }

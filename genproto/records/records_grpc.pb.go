@@ -19,6 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	PetRecordService_GetTotalPetCount_FullMethodName               = "/petrecord.PetRecordService/GetTotalPetCount"
 	PetRecordService_CreatePet_FullMethodName                      = "/petrecord.PetRecordService/CreatePet"
 	PetRecordService_GetPet_FullMethodName                         = "/petrecord.PetRecordService/GetPet"
 	PetRecordService_UpdatePet_FullMethodName                      = "/petrecord.PetRecordService/UpdatePet"
@@ -47,6 +48,8 @@ const (
 //
 // Service definition
 type PetRecordServiceClient interface {
+	// Get total pet count
+	GetTotalPetCount(ctx context.Context, in *GetTotalPetCountRequest, opts ...grpc.CallOption) (*GetTotalPetCountResponse, error)
 	// Pet operations
 	CreatePet(ctx context.Context, in *CreatePetRequest, opts ...grpc.CallOption) (*CreatePetResponse, error)
 	GetPet(ctx context.Context, in *GetPetRequest, opts ...grpc.CallOption) (*GetPetResponse, error)
@@ -79,6 +82,16 @@ type petRecordServiceClient struct {
 
 func NewPetRecordServiceClient(cc grpc.ClientConnInterface) PetRecordServiceClient {
 	return &petRecordServiceClient{cc}
+}
+
+func (c *petRecordServiceClient) GetTotalPetCount(ctx context.Context, in *GetTotalPetCountRequest, opts ...grpc.CallOption) (*GetTotalPetCountResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetTotalPetCountResponse)
+	err := c.cc.Invoke(ctx, PetRecordService_GetTotalPetCount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *petRecordServiceClient) CreatePet(ctx context.Context, in *CreatePetRequest, opts ...grpc.CallOption) (*CreatePetResponse, error) {
@@ -287,6 +300,8 @@ func (c *petRecordServiceClient) GetPrescriptionByExaminationID(ctx context.Cont
 //
 // Service definition
 type PetRecordServiceServer interface {
+	// Get total pet count
+	GetTotalPetCount(context.Context, *GetTotalPetCountRequest) (*GetTotalPetCountResponse, error)
 	// Pet operations
 	CreatePet(context.Context, *CreatePetRequest) (*CreatePetResponse, error)
 	GetPet(context.Context, *GetPetRequest) (*GetPetResponse, error)
@@ -321,6 +336,9 @@ type PetRecordServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedPetRecordServiceServer struct{}
 
+func (UnimplementedPetRecordServiceServer) GetTotalPetCount(context.Context, *GetTotalPetCountRequest) (*GetTotalPetCountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTotalPetCount not implemented")
+}
 func (UnimplementedPetRecordServiceServer) CreatePet(context.Context, *CreatePetRequest) (*CreatePetResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreatePet not implemented")
 }
@@ -400,6 +418,24 @@ func RegisterPetRecordServiceServer(s grpc.ServiceRegistrar, srv PetRecordServic
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&PetRecordService_ServiceDesc, srv)
+}
+
+func _PetRecordService_GetTotalPetCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTotalPetCountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PetRecordServiceServer).GetTotalPetCount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PetRecordService_GetTotalPetCount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PetRecordServiceServer).GetTotalPetCount(ctx, req.(*GetTotalPetCountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _PetRecordService_CreatePet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -769,6 +805,10 @@ var PetRecordService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "petrecord.PetRecordService",
 	HandlerType: (*PetRecordServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetTotalPetCount",
+			Handler:    _PetRecordService_GetTotalPetCount_Handler,
+		},
 		{
 			MethodName: "CreatePet",
 			Handler:    _PetRecordService_CreatePet_Handler,

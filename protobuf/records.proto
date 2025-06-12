@@ -258,9 +258,15 @@ message GetPrescriptionByExaminationIDRequest {
 message GetPrescriptionByExaminationIDResponse {
   Prescription prescriptions = 1;
 }
-
+message GetTotalPetCountRequest {
+}
+message GetTotalPetCountResponse {
+  int32 total_count = 1; // Total number of pets
+}
 // Service definition
 service PetRecordService {
+  // Get total pet count
+  rpc GetTotalPetCount(GetTotalPetCountRequest) returns (GetTotalPetCountResponse) {}
   // Pet operations
   rpc CreatePet(CreatePetRequest) returns (CreatePetResponse) {}
   rpc GetPet(GetPetRequest) returns (GetPetResponse) {}

@@ -27,6 +27,8 @@ const (
 	PaymentService_UpdatePaymentMethod_FullMethodName     = "/payment.PaymentService/UpdatePaymentMethod"
 	PaymentService_UpdatePaymentAmount_FullMethodName     = "/payment.PaymentService/UpdatePaymentAmount"
 	PaymentService_UpdateBankPaymentStatus_FullMethodName = "/payment.PaymentService/UpdateBankPaymentStatus"
+	PaymentService_GetAllPayment_FullMethodName           = "/payment.PaymentService/GetAllPayment"
+	PaymentService_GetTotalRevenue_FullMethodName         = "/payment.PaymentService/GetTotalRevenue"
 )
 
 // PaymentServiceClient is the client API for PaymentService service.
@@ -43,6 +45,8 @@ type PaymentServiceClient interface {
 	UpdatePaymentMethod(ctx context.Context, in *UpdatePaymentMethodRequest, opts ...grpc.CallOption) (*UpdatePaymentMethodResponse, error)
 	UpdatePaymentAmount(ctx context.Context, in *UpdatePaymentAmountRequest, opts ...grpc.CallOption) (*UpdatePaymentAmountResponse, error)
 	UpdateBankPaymentStatus(ctx context.Context, in *UpdateBankPaymentStatusRequest, opts ...grpc.CallOption) (*UpdatePaymentStatusResponse, error)
+	GetAllPayment(ctx context.Context, in *GetAllPaymentsRequest, opts ...grpc.CallOption) (*GetAllPaymentsResponse, error)
+	GetTotalRevenue(ctx context.Context, in *GetTotalRevenueRequest, opts ...grpc.CallOption) (*GetTotalRevenueResponse, error)
 }
 
 type paymentServiceClient struct {
@@ -133,6 +137,26 @@ func (c *paymentServiceClient) UpdateBankPaymentStatus(ctx context.Context, in *
 	return out, nil
 }
 
+func (c *paymentServiceClient) GetAllPayment(ctx context.Context, in *GetAllPaymentsRequest, opts ...grpc.CallOption) (*GetAllPaymentsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAllPaymentsResponse)
+	err := c.cc.Invoke(ctx, PaymentService_GetAllPayment_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *paymentServiceClient) GetTotalRevenue(ctx context.Context, in *GetTotalRevenueRequest, opts ...grpc.CallOption) (*GetTotalRevenueResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetTotalRevenueResponse)
+	err := c.cc.Invoke(ctx, PaymentService_GetTotalRevenue_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PaymentServiceServer is the server API for PaymentService service.
 // All implementations must embed UnimplementedPaymentServiceServer
 // for forward compatibility.
@@ -147,6 +171,8 @@ type PaymentServiceServer interface {
 	UpdatePaymentMethod(context.Context, *UpdatePaymentMethodRequest) (*UpdatePaymentMethodResponse, error)
 	UpdatePaymentAmount(context.Context, *UpdatePaymentAmountRequest) (*UpdatePaymentAmountResponse, error)
 	UpdateBankPaymentStatus(context.Context, *UpdateBankPaymentStatusRequest) (*UpdatePaymentStatusResponse, error)
+	GetAllPayment(context.Context, *GetAllPaymentsRequest) (*GetAllPaymentsResponse, error)
+	GetTotalRevenue(context.Context, *GetTotalRevenueRequest) (*GetTotalRevenueResponse, error)
 	mustEmbedUnimplementedPaymentServiceServer()
 }
 
@@ -180,6 +206,12 @@ func (UnimplementedPaymentServiceServer) UpdatePaymentAmount(context.Context, *U
 }
 func (UnimplementedPaymentServiceServer) UpdateBankPaymentStatus(context.Context, *UpdateBankPaymentStatusRequest) (*UpdatePaymentStatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateBankPaymentStatus not implemented")
+}
+func (UnimplementedPaymentServiceServer) GetAllPayment(context.Context, *GetAllPaymentsRequest) (*GetAllPaymentsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllPayment not implemented")
+}
+func (UnimplementedPaymentServiceServer) GetTotalRevenue(context.Context, *GetTotalRevenueRequest) (*GetTotalRevenueResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTotalRevenue not implemented")
 }
 func (UnimplementedPaymentServiceServer) mustEmbedUnimplementedPaymentServiceServer() {}
 func (UnimplementedPaymentServiceServer) testEmbeddedByValue()                        {}
@@ -346,6 +378,42 @@ func _PaymentService_UpdateBankPaymentStatus_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PaymentService_GetAllPayment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllPaymentsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PaymentServiceServer).GetAllPayment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PaymentService_GetAllPayment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PaymentServiceServer).GetAllPayment(ctx, req.(*GetAllPaymentsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PaymentService_GetTotalRevenue_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTotalRevenueRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PaymentServiceServer).GetTotalRevenue(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PaymentService_GetTotalRevenue_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PaymentServiceServer).GetTotalRevenue(ctx, req.(*GetTotalRevenueRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PaymentService_ServiceDesc is the grpc.ServiceDesc for PaymentService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -384,6 +452,14 @@ var PaymentService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateBankPaymentStatus",
 			Handler:    _PaymentService_UpdateBankPaymentStatus_Handler,
+		},
+		{
+			MethodName: "GetAllPayment",
+			Handler:    _PaymentService_GetAllPayment_Handler,
+		},
+		{
+			MethodName: "GetTotalRevenue",
+			Handler:    _PaymentService_GetTotalRevenue_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -18,6 +18,7 @@ service UserService{
   rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {}
   rpc GetAllUsers(GetAllUsersRequest) returns (GetAllUsersResponse) {}
   rpc EditUser(EditUserRequest) returns (EditUserResponse) {}
+  rpc GetUserCount(GetUserCountRequest) returns (GetUserCountResponse) {}
 }
 message User{
   int32 ID = 1;
@@ -157,4 +158,10 @@ message GetBranchByEmployeeIDRequest {
 }
 message GetBranchByEmployeeIDResponse {
   int32 branch_id = 1;
+}
+message GetUserCountRequest {
+  // No parameters needed
+}
+message GetUserCountResponse {
+  int32 count = 1; // Trả về tổng số người dùng
 }
