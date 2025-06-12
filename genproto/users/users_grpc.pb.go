@@ -29,6 +29,7 @@ const (
 	UserService_ForgotPassword_FullMethodName        = "/UserService/ForgotPassword"
 	UserService_ResetPassword_FullMethodName         = "/UserService/ResetPassword"
 	UserService_GetAllCustomers_FullMethodName       = "/UserService/GetAllCustomers"
+	UserService_GetAllEmployees_FullMethodName       = "/UserService/GetAllEmployees"
 	UserService_GetCustomersPaginated_FullMethodName = "/UserService/GetCustomersPaginated"
 	UserService_GetCustomersByName_FullMethodName    = "/UserService/GetCustomersByName"
 	UserService_GetBranchByEmployeeID_FullMethodName = "/UserService/GetBranchByEmployeeID"
@@ -52,6 +53,7 @@ type UserServiceClient interface {
 	ForgotPassword(ctx context.Context, in *ForgotPasswordRequest, opts ...grpc.CallOption) (*ForgotPasswordResponse, error)
 	ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*ResetPasswordResponse, error)
 	GetAllCustomers(ctx context.Context, in *GetAllCustomersRequest, opts ...grpc.CallOption) (*GetAllCustomersResponse, error)
+	GetAllEmployees(ctx context.Context, in *GetAllCustomersRequest, opts ...grpc.CallOption) (*GetAllCustomersResponse, error)
 	GetCustomersPaginated(ctx context.Context, in *GetCustomersPaginatedRequest, opts ...grpc.CallOption) (*GetCustomersPaginatedResponse, error)
 	GetCustomersByName(ctx context.Context, in *GetCustomersByNameRequest, opts ...grpc.CallOption) (*GetCustomersByNameResponse, error)
 	GetBranchByEmployeeID(ctx context.Context, in *GetBranchByEmployeeIDRequest, opts ...grpc.CallOption) (*GetBranchByEmployeeIDResponse, error)
@@ -169,6 +171,16 @@ func (c *userServiceClient) GetAllCustomers(ctx context.Context, in *GetAllCusto
 	return out, nil
 }
 
+func (c *userServiceClient) GetAllEmployees(ctx context.Context, in *GetAllCustomersRequest, opts ...grpc.CallOption) (*GetAllCustomersResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAllCustomersResponse)
+	err := c.cc.Invoke(ctx, UserService_GetAllEmployees_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) GetCustomersPaginated(ctx context.Context, in *GetCustomersPaginatedRequest, opts ...grpc.CallOption) (*GetCustomersPaginatedResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetCustomersPaginatedResponse)
@@ -253,6 +265,7 @@ type UserServiceServer interface {
 	ForgotPassword(context.Context, *ForgotPasswordRequest) (*ForgotPasswordResponse, error)
 	ResetPassword(context.Context, *ResetPasswordRequest) (*ResetPasswordResponse, error)
 	GetAllCustomers(context.Context, *GetAllCustomersRequest) (*GetAllCustomersResponse, error)
+	GetAllEmployees(context.Context, *GetAllCustomersRequest) (*GetAllCustomersResponse, error)
 	GetCustomersPaginated(context.Context, *GetCustomersPaginatedRequest) (*GetCustomersPaginatedResponse, error)
 	GetCustomersByName(context.Context, *GetCustomersByNameRequest) (*GetCustomersByNameResponse, error)
 	GetBranchByEmployeeID(context.Context, *GetBranchByEmployeeIDRequest) (*GetBranchByEmployeeIDResponse, error)
@@ -299,6 +312,9 @@ func (UnimplementedUserServiceServer) ResetPassword(context.Context, *ResetPassw
 }
 func (UnimplementedUserServiceServer) GetAllCustomers(context.Context, *GetAllCustomersRequest) (*GetAllCustomersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllCustomers not implemented")
+}
+func (UnimplementedUserServiceServer) GetAllEmployees(context.Context, *GetAllCustomersRequest) (*GetAllCustomersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllEmployees not implemented")
 }
 func (UnimplementedUserServiceServer) GetCustomersPaginated(context.Context, *GetCustomersPaginatedRequest) (*GetCustomersPaginatedResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCustomersPaginated not implemented")
@@ -522,6 +538,24 @@ func _UserService_GetAllCustomers_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_GetAllEmployees_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllCustomersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetAllEmployees(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_GetAllEmployees_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetAllEmployees(ctx, req.(*GetAllCustomersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_GetCustomersPaginated_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetCustomersPaginatedRequest)
 	if err := dec(in); err != nil {
@@ -694,6 +728,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAllCustomers",
 			Handler:    _UserService_GetAllCustomers_Handler,
+		},
+		{
+			MethodName: "GetAllEmployees",
+			Handler:    _UserService_GetAllEmployees_Handler,
 		},
 		{
 			MethodName: "GetCustomersPaginated",

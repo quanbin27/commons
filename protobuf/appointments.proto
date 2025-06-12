@@ -34,7 +34,6 @@ enum AppointmentStatus {
   IN_PROGRESS = 1;   // Đang thực hiện
   COMPLETED = 2;     // Hoàn thành
   CANCELLED = 3;     // Đã hủy
-
 }
 
 // Dịch vụ thú cưng

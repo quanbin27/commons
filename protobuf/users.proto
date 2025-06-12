@@ -12,6 +12,7 @@ service UserService{
   rpc ForgotPassword(ForgotPasswordRequest) returns (ForgotPasswordResponse){}
   rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse){}
   rpc GetAllCustomers(GetAllCustomersRequest) returns (GetAllCustomersResponse) {}
+  rpc GetAllEmployees(GetAllCustomersRequest) returns (GetAllCustomersResponse) {}
   rpc GetCustomersPaginated(GetCustomersPaginatedRequest) returns (GetCustomersPaginatedResponse) {}
   rpc GetCustomersByName(GetCustomersByNameRequest) returns (GetCustomersByNameResponse) {}
   rpc GetBranchByEmployeeID(GetBranchByEmployeeIDRequest) returns (GetBranchByEmployeeIDResponse) {}
